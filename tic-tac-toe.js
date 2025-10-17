@@ -1,6 +1,8 @@
 "use strict";
 document.addEventListener('DOMContentLoaded',function(){
-    let player = 'X';
+    //let player = 'X';
+    let startingPlayer ='X';
+    let player = startingPlayer;
     let board = Array(9).fill(null);
     let gameover = false;
     const winningCombos = [[0, 1, 2],[3, 4, 5],[6, 7, 8],[0, 3, 6],[1, 4, 7],
@@ -8,6 +10,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
     const squares = document.querySelectorAll('#board div');
     const statusDiv = document.getElementById('status');
+    const newGameButton = document.querySelector('.controls .btn');
 
     function handleClickSquare(event){
         const square = event.currentTarget;
@@ -68,11 +71,28 @@ document.addEventListener('DOMContentLoaded',function(){
         statusDiv.classList.add('you-won');
     }
 
+    function resetGame(){
+        startingPlayer = startingPlayer === 'X'? 'O': 'X';
+        player= startingPlayer;
+        board.fill(null);
+        gameover = false;
+        squares.forEach(function(square){
+            square.textContent = '';
+            square.classList.remove('X', 'O');
+            square.addEventListener('click', handleClickSquare);
+            square.addEventListener('mouseenter',handleMouseHover);
+            square.addEventListener('mouseleave',handleMouseDormant);
+        });
+        statusDiv.textContent = `${player}'s turn to play!`;
+        statusDiv.classList.remove('you-won');
+    }
+
     squares.forEach(function(square,index){
         square.classList.add('square');
         square.setAttribute('data-index',index);
         square.addEventListener('click',handleClickSquare);
         square.addEventListener('mouseenter',handleMouseHover);
         square.addEventListener('mouseleave',handleMouseDormant);
+        newGameButton.addEventListener('click',resetGame);
     });  
 });
